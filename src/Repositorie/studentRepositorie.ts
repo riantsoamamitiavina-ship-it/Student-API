@@ -18,3 +18,36 @@ export const create = async (name: string, age: number, grade: string): Promise<
   );
   return result.rows[0];
 };
+
+export const update = async (id: number, name: string, age: number, grade: string): Promise<Student | undefined> => {
+    const result = await pool.query(
+        "UPDATE students SET name = $1, age = $2, grade = $3 WHERE id = $4 RETURNING *",
+        [name, age, grade, id]
+    );
+    return result.rows[0];
+};
+
+export const remove = async (id: number): Promise<boolean> => {
+  const result = await pool.query("DELETE FROM students WHERE id = $1", [id]);
+  return (result.rowCount ?? 0) > 0;
+};
+
+export const patch = async (
+  id: number,
+  fields: { name?: string; age?: number; grade?: string }
+): Promise<Student | undefined> => {
+  const keys = Object.keys(fields);
+  if (keys.length === 0) {
+    return await findById(id);
+  }
+
+  const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(", ");
+  const values = Object.values(fields);
+
+  const result = await pool.query(
+    `UPDATE students SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`,
+    [...values, id]
+  );
+
+  return result.rows[0];
+};
