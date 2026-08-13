@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express";
-import * as StudentModel from "../models/student.model";
+import * as StudentModel from "../models/student.model.js";
 
 export const getStudents = (req: Request, res: Response) => {
   const students = StudentModel.getAllStudents();
