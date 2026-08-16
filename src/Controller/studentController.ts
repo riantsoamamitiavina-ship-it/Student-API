@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import * as StudentService from "../Service/studentService";
+import { authenticate } from "../Security/authSecurity";
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.status(200).json(student);
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authenticate, async (req: Request, res: Response) => {
   const { name, age, grade } = req.body;
 
   if (!name || !age || !grade) {
@@ -30,7 +31,7 @@ router.post("/", async (req: Request, res: Response) => {
   res.status(201).json(newStudent);
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authenticate, async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const { name, age, grade } = req.body;
 
@@ -47,7 +48,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   res.status(200).json(updatedStudent);
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticate, async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const wasDeleted = await StudentService.deleteStudent(id);
 
@@ -58,7 +59,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
   res.status(200).json({ message: "Student deleted successfully" });
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticate, async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
   const fields: { name?: string; age?: number; grade?: string } = {};
