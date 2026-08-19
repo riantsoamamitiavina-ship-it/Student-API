@@ -1,3 +1,5 @@
+import { getToken } from "./token";
+
 const API_URL = "http://localhost:3000/api/students";
 
 export interface Student {
@@ -18,6 +20,7 @@ export const createStudent = async (name: string, age: number, grade: string): P
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify({ name, age, grade }),
   });
