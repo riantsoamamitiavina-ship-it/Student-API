@@ -21,7 +21,6 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-export default router;
 
 router.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -38,3 +37,5 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 });
+
+export default router;
